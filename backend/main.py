@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from api.routes import document_routes
+from api.routes import chat_routes
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
@@ -24,7 +24,7 @@ app.add_middleware(
 
 
 # Routers
-app.include_router(document_routes.router, prefix="/api/documents")
+app.include_router(chat_routes.router, prefix="/api/documents")
 
 # Health checks
 @app.get("/")
