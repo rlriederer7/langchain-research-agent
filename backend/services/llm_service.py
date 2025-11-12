@@ -18,7 +18,7 @@ class LLMService:
             temperature=temperature if temperature is not None else settings.LLM_TEMPERATURE,
             max_tokens=max_tokens if max_tokens is not None else settings.LLM_MAX_TOKENS,
             max_retries=settings.LLM_MAX_RETRIES,
-            timeout=settings.LLM_TIMEOUT,
+            timeout=settings.LLM_MAX_TIMEOUT,
         )
 
 

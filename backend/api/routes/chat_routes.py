@@ -2,7 +2,7 @@ import os
 from fastapi import APIRouter, HTTPException
 from models.chat_models import Message, ChatRequest, ChatResponse
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from services.chat_service import llm_service
+from services.llm_service import llm_service
 
 router = APIRouter()
 
