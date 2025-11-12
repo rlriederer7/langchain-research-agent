@@ -12,15 +12,13 @@ router = APIRouter()
 async def research_agent(request: AgentRequest):
     try:
         tools = [get_search_web_ddg()]
-        print(0)
         agent = create_research_agent(max_iterations=request.max_iterations, tools=tools)
-        print(1)
+
         result = await agent.research(
             query=request.query,
             system_prompt=request.system_prompt
         )
-        print(2)
-        print(result)
+
         return AgentResponse(
             response=result["output"][0]['text'],
             intermediate_steps=result["intermediate_steps"]
