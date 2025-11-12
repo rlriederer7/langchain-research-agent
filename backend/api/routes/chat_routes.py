@@ -27,7 +27,7 @@ async def chat(request: ChatRequest):
             temperature=request.temperature,
             max_tokens=request.max_tokens,
         )
-        print(llm_service.llm.max_retries)
+
         response = await llm_with_params.ainvoke(lc_messages)
 
         return ChatResponse(
