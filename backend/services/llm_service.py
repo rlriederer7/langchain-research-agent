@@ -9,7 +9,7 @@ class LLMService:
             temperature=settings.LLM_TEMPERATURE,
             max_tokens=settings.LLM_MAX_TOKENS,
             max_retries=settings.LLM_MAX_RETRIES,
-            timeout=settings.LLM_TIMEOUT,
+            timeout=settings.LLM_MAX_TIMEOUT,
         )
 
     def get_llm(self, temperature=None, max_tokens=None):
