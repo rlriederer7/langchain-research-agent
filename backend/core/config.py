@@ -5,8 +5,10 @@ from typing import Optional
 class Settings(BaseSettings):
     ANTHROPIC_API_KEY: str
     MODEL_NAME: str = "claude-sonnet-4-20250514"
-    DEFAULT_TEMPERATURE: float = 0.7
-    DEFAULT_MAX_TOKENS: int = 1024
+    LLM_TEMPERATURE: float = 0.7
+    LLM_MAX_TOKENS: int = 1024
+    LLM_MAX_RETRIES: int = 3
+    LLM_MAX_TIMEOUT: float = 60.0
 
     class Config:
         env_file = ".env"

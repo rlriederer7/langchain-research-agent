@@ -7,13 +7,13 @@ class Message(BaseModel):
     content: str
 
 
-class ChatRequest:
+class ChatRequest(BaseModel):
     messages: List[Message]
     system_prompt: Optional[str] = None
-    temperature: Optional[float] = 0.7
-    max_tokens: Optional[int] = 1024
+    temperature: Optional[float] = None
+    max_tokens: Optional[int] = None
 
 
-class ChatResponse:
+class ChatResponse(BaseModel):
     response: str
     model: str

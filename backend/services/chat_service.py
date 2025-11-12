@@ -1,6 +1,25 @@
 from langchain_anthropic import ChatAnthropic
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from core.config import settings
 
-llm = ChatAnthropic(
-    model="claude-sonnet-4-20250514",
-)
+
+class LLMService:
+    def __init__(self):
+        self.llm = ChatAnthropic(
+            model=settings.MODEL_NAME,
+            temperature=settings.LLM_TEMPERATURE,
+            max_tokens=settings.LLM_MAX_TOKENS,
+            max_retries=settings.LLM_MAX_RETRIES,
+            timeout=settings.LLM_TIMEOUT,
+        )
+
+    def get_llm(self, temperature=None, max_tokens=None):
+        return ChatAnthropic(
+            model=settings.MODEL_NAME,
+            temperature=temperature if temperature is not None else settings.LLM_TEMPERATURE,
+            max_tokens=max_tokens if max_tokens is not None else settings.LLM_MAX_TOKENS,
+            max_retries=settings.LLM_MAX_RETRIES,
+            timeout=settings.LLM_TIMEOUT,
+        )
+
+
+llm_service = LLMService()
