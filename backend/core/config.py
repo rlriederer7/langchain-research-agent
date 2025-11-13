@@ -10,6 +10,10 @@ class Settings(BaseSettings):
     LLM_MAX_RETRIES: int = 3
     LLM_MAX_TIMEOUT: float = 60.0
 
+    PINECONE_API_KEY: str
+    PINECONE_INDEX_NAME: str = "pinecone-index"
+    PINECONE_ENVIRONMENT: str = "us-east-1"
+
     class Config:
         env_file = ".env"
         case_sensitive = True
