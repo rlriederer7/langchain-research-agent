@@ -31,4 +31,4 @@ class DocumentSearchResponse(BaseModel):
 
 class NamespaceDeleteResponse(BaseModel):
     message: str
-    namespace: str
+    namespace: Optional[str] = None

@@ -17,7 +17,7 @@ class PineconeVectorService:
         if not settings.PINECONE_API_KEY:
             raise ValueError("Pinecone API key not found")
         self.pc = PineconeClient(api_key=settings.PINECONE_API_KEY)
-        self.embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+        self.embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
         self.ensure_index_exists()
 
     def ensure_index_exists(self):

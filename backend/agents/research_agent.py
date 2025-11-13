@@ -1,10 +1,8 @@
 from typing import Optional, List, Dict, Any
-from langchain_anthropic import ChatAnthropic
 from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
 from langchain_core.language_models import BaseLanguageModel
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import BaseTool
-
 from services.llm_service import llm_service
 
 
@@ -13,6 +11,7 @@ class ResearchAgent:
         You have access to web search tools. Use them to find accurate, up-to-date information.
         When you find relevant information, cite your sources.
         Be thorough but concise in your research.
+        You also have access to a tool that retrieves chunks from uploaded technical documents.
         Simple questions should beget simple results."""
 
     def __init__(
