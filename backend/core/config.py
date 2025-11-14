@@ -4,7 +4,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
     ANTHROPIC_API_KEY: str
-    MODEL_NAME: str = "claude-sonnet-4-20250514"
+    MODEL_NAME: str = "claude-haiku-4-5-20251001"
     LLM_TEMPERATURE: float = 0.7
     LLM_MAX_TOKENS: int = 1024
     LLM_MAX_RETRIES: int = 3

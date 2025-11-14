@@ -18,7 +18,7 @@ class ResearchAgent:
             self,
             tools: List[BaseTool],
             llm: Optional[BaseLanguageModel] = None,
-            max_iterations: int = 10,
+            max_iterations: int = 2,
             verbose: bool = True,
     ):
         self.llm = llm_service.get_llm()
@@ -42,7 +42,6 @@ class ResearchAgent:
             tools=self.tools,
             verbose=self.verbose,
             max_iterations=self.max_iterations,
-            return_intermediate_steps=True,
         )
         print("finished agent init")
 
@@ -56,16 +55,12 @@ class ResearchAgent:
             "system_prompt": system_prompt or self.DEFAULT_SYSTEM_PROMPT
         })
 
+        print(f"Result keys: {result.keys()}")
+        print(f"Result type: {type(result)}")
+        print(f"Result: {result}")
+
         return {
-            "output": result["output"],
-            "intermediate_steps": [
-                {
-                    "tool": step[0].tool,
-                    "tool_input": step[0].tool_input,
-                    "tool_output": step[1]
-                }
-                for step in result.get("intermediate_steps", [])
-            ]
+            "output": result.get("output", "")
         }
 
 

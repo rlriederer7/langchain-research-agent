@@ -13,4 +13,3 @@ class AgentRequest(BaseModel):
 
 class AgentResponse(BaseModel):
     response: str
-    intermediate_steps: list
