@@ -8,16 +8,16 @@ from agents.base_agent import BaseAgent
 from services.llm_service import llm_service
 
 
-class ResearchAgent(BaseAgent):
-    DEFAULT_SYSTEM_PROMPT = """You are a helpful research assistant.
-        You have access to web search tools. Use them to find accurate, up-to-date information.
+class ChatAgent(BaseAgent):
+    DEFAULT_SYSTEM_PROMPT = """You are a helpful chatbot :)
+        You have access to web search tools. Use them to find accurate, up-to-date information if you want to.
         When you find relevant information, cite your sources.
-        Be thorough but concise in your research.
-        Simple questions should beget simple results."""
+        Have fun :)"""
 
     def __init__(
             self,
             tools: List[BaseTool],
+            vector_retriever,
             pinecone_index=None,
             llm: Optional[BaseLanguageModel] = None,
             max_iterations: int = 6,
@@ -30,29 +30,35 @@ class ResearchAgent(BaseAgent):
             llm=llm,
             max_iterations=max_iterations,
             verbose=verbose,
-            memory_config=None
+            memory_config={
+                'short_term': True,
+                'entity': True,
+                'vector_retriever': vector_retriever
+            },
         )
-        print(pinecone_index)
         print("finished agent init")
 
     async def research(self, query: str) -> Dict[str, Any]:
         return await self.run(query)
 
 
-def create_research_agent(
+def create_chat_agent(
         tools: List[BaseTool],
+        vector_retriever,
         pinecone_index,
         llm: Optional[BaseLanguageModel] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
         **kwargs
-) -> ResearchAgent:
-    research_llm = llm or llm_service.get_llm(
+) -> ChatAgent:
+    chat_llm = llm or llm_service.get_llm(
         temperature=temperature,
         max_tokens=max_tokens
     )
-    return ResearchAgent(
-        llm=research_llm,
+    return ChatAgent(
+        llm=chat_llm,
         tools=tools,
+        vector_retriever=vector_retriever,
         pinecone_index=pinecone_index,
-        **kwargs)
+        **kwargs
+    )
