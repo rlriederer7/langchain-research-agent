@@ -37,9 +37,16 @@ async def chat_agent(request: AgentRequest):
             query=request.query
         )
 
-        return AgentResponse(
-            response=result["output"][0]['text']
-        )
+        output = result.get("output", "")
+
+        if isinstance(output, list) and len(output) > 0:
+            response_text = output[0].get('text', str(output))
+        elif isinstance(output, str):
+            response_text = output
+        else:
+            response_text = str(output)
+
+        return AgentResponse(response=response_text)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in agent execution: {str(e)}")
@@ -63,9 +70,16 @@ async def research_agent(request: AgentRequest):
             query=request.query
         )
 
-        return AgentResponse(
-            response=result["output"][0]['text']
-        )
+        output = result.get("output", "")
+
+        if isinstance(output, list) and len(output) > 0:
+            response_text = output[0].get('text', str(output))
+        elif isinstance(output, str):
+            response_text = output
+        else:
+            response_text = str(output)
+
+        return AgentResponse(response=response_text)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in agent execution: {str(e)}")

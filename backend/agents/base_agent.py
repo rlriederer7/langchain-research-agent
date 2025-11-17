@@ -144,19 +144,32 @@ class BaseAgent:
         self.save_chat_history()
 
     async def run(self, query: str) -> Dict[str, Any]:
-        vars = self.memory.load_memory_variables({"input": query})
         memory_vars = self.load_memory(query)
+
+        print(f"Input to agent: {query}")
+        print(f"Memory vars: {memory_vars}")
+
         result = await self.agent_executor.ainvoke({
             "input": query,
             **memory_vars
         })
 
-        self.save_to_memory(query, result.get("output",""))
-
-        print(f"Result keys: {result.keys()}")
+        print(f"Result keys: {result.keys() if isinstance(result, dict) else 'Not a dict'}")
         print(f"Result type: {type(result)}")
-        print(f"Result: {result}")
+        print(f"Result content: {result}")
 
-        return {
-            "output": result.get("output", "")
-        }
+        # Safe extraction
+        try:
+            if isinstance(result, dict):
+                output = result.get("output", result.get("text", str(result)))
+            else:
+                output = str(result)
+
+            self.save_to_memory(query, output)
+
+            return {"output": output}
+        except Exception as e:
+            print(f"Error processing result: {e}")
+            import traceback
+            traceback.print_exc()
+            raise
