@@ -22,6 +22,8 @@ class ChatAgent(BaseAgent):
             llm: Optional[BaseLanguageModel] = None,
             max_iterations: int = 6,
             verbose: bool = True,
+            session_id: Optional[str] = None,
+            storage_adapter=None,
     ):
         super().__init__(
             tools=tools,
@@ -32,9 +34,10 @@ class ChatAgent(BaseAgent):
             verbose=verbose,
             memory_config={
                 'short_term': True,
-                'entity': True,
                 'vector_retriever': vector_retriever
             },
+            session_id=session_id,
+            storage_adapter=storage_adapter,
         )
         print("finished agent init")
 
@@ -49,6 +52,8 @@ def create_chat_agent(
         llm: Optional[BaseLanguageModel] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
+        session_id: Optional[str] = None,
+        storage_adapter=None,
         **kwargs
 ) -> ChatAgent:
     chat_llm = llm or llm_service.get_llm(
@@ -60,5 +65,7 @@ def create_chat_agent(
         tools=tools,
         vector_retriever=vector_retriever,
         pinecone_index=pinecone_index,
+        session_id=session_id,
+        storage_adapter=storage_adapter,
         **kwargs
     )

@@ -9,6 +9,7 @@ class AgentRequest(BaseModel):
     temperature: Optional[float] = None
     max_tokens: Optional[int] = None
     namespace: Optional[str] = None
+    session_id: Optional[str] = None
 
 
 class AgentResponse(BaseModel):

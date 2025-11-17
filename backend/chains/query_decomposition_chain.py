@@ -32,18 +32,28 @@ class QueryDecompositionChain:
 
         prompt = ChatPromptTemplate.from_template(
             """You are a research assistant that breaks down complex questions into simpler sub-questions.
-    
+            
             Given a complex research question, decompose it into 2-5 simpler sub-questions that:
-            1. Can be answered independently
-            2. Together provide enough information to answer the original question
-            3. Are specific and focused
-            4. Progress logically from foundational to more complex
-    
+            1. **Can be answered INDEPENDENTLY without knowing the answers to other sub-questions**
+            2. Each question must be SELF-CONTAINED with all necessary context
+            3. Together provide enough information to answer the original question
+            4. Are specific and focused
+        
+            CRITICAL: All questions will be researched in parallel by different agents who CANNOT see each other's work.
+            Therefore, avoid questions like:
+            - ❌ "What was the project timeline?" (which project?)
+            - ❌ "What was the actual performance?" (performance of what?)
+            - ✅ "What was the timeline for the Azerbaijan bridge project mentioned in the context?"
+            - ✅ "What were the actual cost and schedule outcomes for the Azerbaijan bridge project?"
+        
+            Each question should repeat key context (project names, locations, specific entities) so it can be 
+            researched independently.
+            
             Complex Question: {question}
     
             {format_instructions}
     
-            Be strategic: sometimes you need background info first, sometimes you need to compare multiple aspects."""
+            Be strategic: all questions will be answered simultaneously, so each question must be answerable on its own, sometimes you need to compare multiple aspects."""
         )
 
         return (
