@@ -4,3 +4,4 @@
 /.idea/
 /__pycache__/
 /backend/chat_histories/
+/backend/api/routes/test.py
