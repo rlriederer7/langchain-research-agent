@@ -12,16 +12,16 @@ class LLMService:
         max_tok = max_tokens if max_tokens is not None else settings.LLM_MAX_TOKENS
 
         if settings.LLM_PROVIDER == "anthropic":
-            self.llm = ChatAnthropic(
-                model=settings.MODEL_NAME,
-                temperature=settings.LLM_TEMPERATURE,
-                max_tokens=settings.LLM_MAX_TOKENS,
+            return ChatAnthropic(
+                model=settings.ANTHROPIC_MODEL_NAME,
+                temperature=temp,
+                max_tokens=max_tok,
                 max_retries=settings.LLM_MAX_RETRIES,
                 timeout=settings.LLM_MAX_TIMEOUT,
             )
         elif settings.LLM_PROVIDER == "ollama":
             return ChatOllama(
-                model=settings.MODEL_NAME,
+                model=settings.OLLAMA_MODEL_NAME,
                 base_url=settings.OLLAMA_BASE_URL,
                 temperature=temp,
                 num_predict=max_tok,
