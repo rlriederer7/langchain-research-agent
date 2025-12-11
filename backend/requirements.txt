@@ -15,7 +15,9 @@ langchain-community==0.4.1
 langchain-huggingface==1.0.1
 langchain-ollama==1.0.0
 langgraph==1.0.4
+langgraph-checkpoint-postgres==3.0.2
 pydantic-settings==2.12.0
+psycopg==3.3.2
 ddgs==9.9.0
 langchain-pinecone==0.2.13
 pandas>=2.0.0
