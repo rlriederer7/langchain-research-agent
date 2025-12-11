@@ -4,14 +4,20 @@ from langchain_core.language_models import BaseLanguageModel
 from langchain_core.tools import BaseTool
 
 from agents.a_graph_base_agent import GraphBaseAgent
+from core.database import get_checkpointer
 from services.llm_service import llm_service
 
 
 class GraphChatAgent(GraphBaseAgent):
+    # TODO: Implement system prompt for LangGraph agents. Currently does not use at any point.
     DEFAULT_SYSTEM_PROMPT = """You are a helpful chatbot :)
         You have access to web search tools. Use them to find accurate, up-to-date information if you want to.
         When you find relevant information, cite your sources.
-        Have fun :)"""
+        Have fun :)
+        
+        Remember, the user only ever sees your *last* message.
+        If you respond to the user, use tools, and then finish responding, the user only sees 
+        the second half of your response to the user."""
 
     def __init__(
             self,
@@ -21,7 +27,6 @@ class GraphChatAgent(GraphBaseAgent):
             llm: Optional[BaseLanguageModel] = None,
             max_iterations: int = 6,
             verbose: bool = True,
-            session_id: Optional[str] = None,
             storage_adapter=None,
     ):
         super().__init__(
@@ -34,13 +39,14 @@ class GraphChatAgent(GraphBaseAgent):
                 'short_term': True,
                 'vector_retriever': vector_retriever
             },
-            session_id=session_id,
             storage_adapter=storage_adapter,
+            checkpointer=get_checkpointer()
         )
         print("finished agent init")
 
-    async def research(self, query: str) -> Dict[str, Any]:
-        return await self.run(query)
+    async def chat(self, query: str, thread_id: str) -> Dict[str, Any]:
+        print(10)
+        return await self.run(query, thread_id)
 
 
 def create_graph_chat_agent(
@@ -54,16 +60,17 @@ def create_graph_chat_agent(
         storage_adapter=None,
         **kwargs
 ) -> GraphChatAgent:
+
     chat_llm = llm or llm_service.get_llm(
         temperature=temperature,
         max_tokens=max_tokens
     )
+
     return GraphChatAgent(
         llm=chat_llm,
         tools=tools,
         vector_retriever=vector_retriever,
         pinecone_index=pinecone_index,
-        session_id=session_id,
         storage_adapter=storage_adapter,
         **kwargs
     )

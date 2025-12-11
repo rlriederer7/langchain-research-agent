@@ -22,17 +22,18 @@ class GraphBaseAgent:
             llm: Optional[BaseLanguageModel] = None,
             max_iterations: int = 2,
             memory_config: Optional[Dict] = None,
-            session_id: Optional[str] = None,
             storage_adapter=None,
+            checkpointer=None
     ):
         self.llm = llm or llm_service.get_llm()
         self.tools = tools
         self.max_iterations = max_iterations
         self.pinecone_index = pinecone_index
-        self.session_id = session_id
         self.storage_adapter = storage_adapter
 
         self.llm_with_tools = self.llm.bind_tools(self.tools)
+
+        self.checkpointer = checkpointer
 
         self.app = self._build_graph()
 
@@ -64,9 +65,15 @@ class GraphBaseAgent:
         )
         workflow.add_edge("tools", "agent")
 
-        return workflow.compile()
+        return workflow.compile(checkpointer=self.checkpointer)
 
-    async def run(self, query: str):
+    async def run(self, query: str, thread_id: str):
         from langchain_core.messages import HumanMessage
         inputs = {"messages": [HumanMessage(content=query)]}
-        return await self.app.ainvoke(inputs)
+        config = {"configurable": {"thread_id": thread_id}}
+        return await self.app.ainvoke(inputs, config=config)
+
+    async def get_history(self, thread_id: str):
+        config = {"configurable": {"thread_id": thread_id}}
+        state = self.app.get_state(config)
+        return state.values.get("messages", [])

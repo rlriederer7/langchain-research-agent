@@ -1,18 +1,27 @@
 import os
-from langgraph.checkpoint.postgres import PostgresSaver
-import psycopg
+from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+from psycopg_pool import AsyncConnectionPool
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-_connection = None
+_connection_pool = None
 _checkpointer = None
 
 
-def initialize_checkpointer():
-    global _connection, _checkpointer
-    _connection = psycopg.connect(DATABASE_URL, autocommit=True)
-    _checkpointer = PostgresSaver(_connection)
-    _checkpointer.setup()
+async def initialize_checkpointer():
+    global _connection_pool, _checkpointer
+
+    _connection_pool = AsyncConnectionPool(
+        conninfo=DATABASE_URL,
+        max_size=20,
+        min_size=2,
+        open=False
+    )
+
+    await _connection_pool.open()
+
+    _checkpointer = AsyncPostgresSaver(_connection_pool)
+    await _checkpointer.setup()
 
     return _checkpointer
 
@@ -23,9 +32,9 @@ def get_checkpointer():
     return _checkpointer
 
 
-def cleanup_checkpointer():
-    global _checkpointer
-    if _checkpointer is not None:
-        if hasattr(_checkpointer, 'close'):
-            _checkpointer.close()
-        _checkpointer = None
+async def cleanup_checkpointer():
+    global _connection_pool, _checkpointer
+    if _connection_pool is not None:
+        await _connection_pool.close()
+        _connection_pool = None
+    _checkpointer = None
